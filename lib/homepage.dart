@@ -1,7 +1,6 @@
 import 'package:bloodbank/addpage.dart';
 import 'package:bloodbank/update.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,11 +14,10 @@ class _HomePageState extends State<HomePage> {
   final CollectionReference donor =
       FirebaseFirestore.instance.collection('donor');
 
+  void deleteDonor(docId) {
+    donor.doc(docId).delete();
+  }
 
-      void deleteDonor(docId){
-        donor.doc(docId).delete();
-      }
-      
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,32 +58,46 @@ class _HomePageState extends State<HomePage> {
                           child: CircleAvatar(
                             backgroundColor: Colors.red,
                             radius: 30,
-                            child: Text(donorSnap['group']??""
-                            ),
+                            child: Text(donorSnap['group'] ?? ""),
                           ),
                         ),
-                       Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(donorSnap['name'],style: TextStyle(fontSize: 20),),
-                           Text(donorSnap['phone'].toString()),
-                        ],
-                       ),
-                       Row(children: [
-                        IconButton(onPressed: (){
-                            Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UpdateDonor(arguments:{
-                'name': donorSnap['name'],
-                'phone':donorSnap['phone'].toString(),
-                'group':donorSnap['group'],
-                'id':donorSnap.id
-              }),));
-                    }, icon: Icon(Icons.edit),color: Colors.blue,),
-                        IconButton(onPressed: (){
-                          deleteDonor(donorSnap.id);
-                        }, icon: Icon(Icons.delete),color: Colors.red,),
-
-                       ],) 
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              donorSnap['name'],
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(donorSnap['phone'].toString()),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UpdateDonor(args: {
+                                        'name': donorSnap['name'] ?? "",
+                                        'phone': donorSnap['phone'].toString(),
+                                        'group': donorSnap['group'] ?? "",
+                                        'id': donorSnap.id
+                                      }),
+                                    ));
+                              },
+                              icon: Icon(Icons.edit),
+                              color: Colors.blue,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                deleteDonor(donorSnap.id);
+                              },
+                              icon: Icon(Icons.delete),
+                              color: Colors.red,
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),

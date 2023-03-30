@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 
 class UpdateDonor extends StatefulWidget {
-  const UpdateDonor({Key? key, required Map arguments}) : super(key: key);
-
+  const UpdateDonor({Key? key, required this.args}) : super(key: key);
+  final Map args;
   @override
   State<UpdateDonor> createState() => _UpdateDonorState();
 }
 
 class _UpdateDonorState extends State<UpdateDonor> {
-  
   final bloodgroups = [
     'A+',
     'A',
@@ -29,22 +27,23 @@ class _UpdateDonorState extends State<UpdateDonor> {
   final CollectionReference donor =
       FirebaseFirestore.instance.collection('donor');
 
-      TextEditingController donarName = TextEditingController();
-            TextEditingController donarNumber = TextEditingController();
-
-
+  TextEditingController donarName = TextEditingController();
+  TextEditingController donarNumber = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments as Map;
-    donarName.text = args['name']??"";
-    donarNumber.text = args['phone'];
-    selectedgroup = args['group'];
-    final docId = args['id'];
+    // final args = ModalRoute.of(context)?.settings.arguments as Map;
+    // print(args['name']);
+    // print(args['name']);
+    // print(args['name']);
+    donarName.text = widget.args['name'] ?? "";
+    donarNumber.text = widget.args['phone'] ?? "";
+    selectedgroup = widget.args['group'] ?? "";
+    final docId = widget.args['id'];
     return Scaffold(
       appBar: AppBar(
           title: Text(
-        "Update Doners", 
+        "Update Doners",
         style: TextStyle(color: Colors.white),
       )),
       body: Column(
@@ -67,11 +66,10 @@ class _UpdateDonorState extends State<UpdateDonor> {
                   border: OutlineInputBorder(), label: Text("Phone Number")),
             ),
           ),
-          
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
-              decoration: InputDecoration(label: Text("Select blood gropup")),
+                decoration: InputDecoration(label: Text("Select blood gropup")),
                 items: bloodgroups
                     .map((e) => DropdownMenuItem(
                           value: e,
@@ -82,9 +80,7 @@ class _UpdateDonorState extends State<UpdateDonor> {
                   selectedgroup = val as String?;
                 }),
           ),
-          ElevatedButton(onPressed: (){
-           
-          }, child: Text("Update"))
+          ElevatedButton(onPressed: () {}, child: Text("Update"))
         ],
       ),
     );
